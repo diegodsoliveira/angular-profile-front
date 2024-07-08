@@ -12,7 +12,7 @@ export class AppComponent implements OnInit {
 
   constructor(
     private readonly _countriesService: CountriesService,
-    private readonly _statesService: StatesService
+    private readonly _statesService: StatesService,
   ) { }
   ngOnInit() {
     this._countriesService.getCountries().subscribe((countriesResponse) => {

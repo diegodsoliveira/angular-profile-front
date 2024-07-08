@@ -1,6 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { map, pipe } from "rxjs";
+import { map, Observable } from "rxjs";
+import { IStatesResponse } from "../interfaces/states-response/states-response.interface";
+import { StatesList } from "../types/states-list";
 
 @Injectable({
   providedIn: 'root',
@@ -10,14 +12,14 @@ export class StatesService {
     private readonly _httpClient: HttpClient
   ) { }
 
-  getStates(countryName: string) {
-    return this._httpClient.post<any>(
+  getStates(countryName: string): Observable<StatesList> {
+    return this._httpClient.post<IStatesResponse>(
       'https://countriesnow.space/api/v0.1/countries/states',
       { country: countryName }
     ).pipe(
       map((statesResponse) => {
         return statesResponse.data.states;
-      })
+      }),
     );
   }
 }
