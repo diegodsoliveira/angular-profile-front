@@ -6,9 +6,3 @@ export interface IAddress {
   state: string;
   city: string;
 }
-
-export interface IDependent {
-  name: string;
-  age: number;
-  document: number;
-}
