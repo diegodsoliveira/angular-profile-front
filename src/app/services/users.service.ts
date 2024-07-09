@@ -3,12 +3,13 @@ import { Observable } from "rxjs";
 import { MaritalStatusEnum } from "../enums/marital-status.enum";
 import { PhoneTypeEnum } from "../enums/phone-type.enum";
 import { AddressTypeEnum } from "../enums/address-type.enum";
+import { UsersListResponse } from "../types/users-list-response";
 
 @Injectable({
   providedIn: 'root',
 })
 export class UsersService {
-  private readonly usersList: any[] = [
+  private readonly usersList: UsersListResponse = [
     {
       name: 'Fulano',
       email: 'fulano@hotmail.com',
@@ -139,10 +140,10 @@ export class UsersService {
       dependentsList: [],
     }
   ];
-  getUsers() {
-    return new Observable((observer) => {
+  getUsers(): Observable<UsersListResponse> {
+    return new Observable<UsersListResponse>((observer) => {
       setTimeout(() => {
-        observer.next([this.usersList]);
+        observer.next(this.usersList);
       }, 500);
     });
   }
