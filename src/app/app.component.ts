@@ -1,8 +1,10 @@
+import { UsersListResponse } from './types/users-list-response';
 import { StatesService } from './services/states.service';
 import { Component, OnInit } from '@angular/core';
 import { CountriesService } from './services/countries.service';
 import { CitiesService } from './services/cities.service';
 import { UsersService } from './services/users.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +13,7 @@ import { UsersService } from './services/users.service';
 })
 export class AppComponent implements OnInit {
   title = 'angular-profile-front';
+  usersList: UsersListResponse = [];
 
   constructor(
     private readonly _countriesService: CountriesService,
@@ -19,18 +22,16 @@ export class AppComponent implements OnInit {
     private readonly _usersService: UsersService,
   ) { }
   ngOnInit() {
-    this._countriesService.getCountries().subscribe((countriesResponse) => {
-      console.log('countriesResponse', countriesResponse);
-    });
-    this._statesService.getStates('Brazil').subscribe((statesResponse) => {
-      console.log('statesResponse', statesResponse);
-    })
-    this._citiesService.getCities('Brazil', 'Bahia').subscribe((citiesResponse) => {
-      console.log('citiesResponse', citiesResponse);
-    })
-    this._usersService.getUsers().subscribe((usersListResponse) => {
-      console.log('usersListResponse', usersListResponse);
-    })
+    // this._countriesService.getCountries().subscribe((countriesResponse) => {
+    //   console.log('countriesResponse', countriesResponse);
+    // });
+    // this._statesService.getStates('Brazil').subscribe((statesResponse) => {
+    //   console.log('statesResponse', statesResponse);
+    // })
+    // this._citiesService.getCities('Brazil', 'Bahia').subscribe((citiesResponse) => {
+    //   console.log('citiesResponse', citiesResponse);
+    // })
+    this._usersService.getUsers().pipe(take(1)).subscribe((usersListResponse) => this.usersList = usersListResponse);
 
   }
 }
