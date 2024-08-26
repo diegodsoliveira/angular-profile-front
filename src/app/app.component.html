@@ -4,18 +4,12 @@
       <app-users-list *ngIf="usersList.length > 0" [usersList]="usersList"
         (onUserSelected)="onUserSelected($event)"></app-users-list>
 
-      <mat-tab-group [(selectedIndex)]="currentTabIndex" *ngIf="userSelectedIndex !== undefined">
-        <mat-tab label=" Geral">
-          <app-general-informations [user]="userSelected"></app-general-informations>
-        </mat-tab>
+      <app-buttons-container *ngIf="userSelectedIndex !== undefined" [isInEditMode]="isInEditMode"
+        (onEditButton)="onEditButton()" (onCancelButton)="onCancelButton()" (onSaveButton)="onSaveButton()">
+      </app-buttons-container>
 
-        <mat-tab label="Contato">
-          <app-contact-informations [user]="userSelected"></app-contact-informations>
-        </mat-tab>
-        <mat-tab label="Dependente">
-          <app-dependents-list [dependentsList]="userSelected.dependentsList"></app-dependents-list>
-        </mat-tab>
-      </mat-tab-group>
+      <app-user-informations-container *ngIf="userSelectedIndex !== undefined" [isInEditMode]="isInEditMode"
+        [userSelected]="userSelected"></app-user-informations-container>
 
     </mat-card-content>
   </mat-card>

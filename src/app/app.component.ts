@@ -13,13 +13,13 @@ import { IUser } from './interfaces/user/user.interface';
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
+
   userSelectedIndex: number | undefined;
   userSelected: IUser = {} as IUser;
-
+  isInEditMode: boolean = false;
 
   title = 'angular-profile-front';
   usersList: UsersListResponse = [];
-  currentTabIndex: number = 0;
 
   constructor(
     private readonly _countriesService: CountriesService,
@@ -46,7 +46,15 @@ export class AppComponent implements OnInit {
     if (userFound) {
       this.userSelectedIndex = userIndex;
       this.userSelected = structuredClone(userFound);
-      this.currentTabIndex = 0;
     }
+  }
+  onSaveButton() {
+    this.isInEditMode = false;
+  }
+  onCancelButton() {
+    this.isInEditMode = false;
+  }
+  onEditButton() {
+    this.isInEditMode = true;
   }
 }
