@@ -1,10 +1,11 @@
-import { UsersListResponse } from './types/users-list-response';
-import { StatesService } from './services/states.service';
 import { Component, OnInit } from '@angular/core';
-import { CountriesService } from './services/countries.service';
-import { CitiesService } from './services/cities.service';
-import { UsersService } from './services/users.service';
 import { take } from 'rxjs';
+import { CitiesService } from './services/cities.service';
+import { CountriesService } from './services/countries.service';
+import { StatesService } from './services/states.service';
+import { UsersService } from './services/users.service';
+import { UsersListResponse } from './types/users-list-response';
+import { IUser } from './interfaces/user/user.interface';
 
 @Component({
   selector: 'app-root',
@@ -12,8 +13,13 @@ import { take } from 'rxjs';
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
+  userSelectedIndex: number | undefined;
+  userSelected: IUser = {} as IUser;
+
+
   title = 'angular-profile-front';
   usersList: UsersListResponse = [];
+  currentTabIndex: number = 0;
 
   constructor(
     private readonly _countriesService: CountriesService,
@@ -33,5 +39,14 @@ export class AppComponent implements OnInit {
     // })
     this._usersService.getUsers().pipe(take(1)).subscribe((usersListResponse) => this.usersList = usersListResponse);
 
+  }
+
+  onUserSelected(userIndex: number) {
+    const userFound = this.usersList[userIndex];
+    if (userFound) {
+      this.userSelectedIndex = userIndex;
+      this.userSelected = structuredClone(userFound);
+      this.currentTabIndex = 0;
+    }
   }
 }

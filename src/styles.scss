@@ -7,7 +7,8 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background-color: grey ;}
 
-// .user-card-hover:hover {
-//   background-color: #9ca3af !important;
-//   cursor: pointer;
-// }
+.user-selected,
+.user-card-hover:hover {
+  background-color: #83a9eb !important;
+  cursor: pointer;
+}
