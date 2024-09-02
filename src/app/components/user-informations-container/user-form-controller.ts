@@ -1,13 +1,14 @@
 import { inject } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { IUser } from "../../interfaces/user/user.interface";
-import { PhonesList } from "../../types/phones-list";
 import { AddressList } from "../../types/address-list";
-import { state } from "@angular/animations";
 import { DependentsList } from "../../types/dependents-list";
+import { PhonesList } from "../../types/phones-list";
 
 export class UserFormController {
   userForm!: FormGroup;
+
+  private emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   private _fb = inject(FormBuilder);
 
@@ -32,6 +33,7 @@ export class UserFormController {
   }
 
   fulFilUserForm(user: IUser) {
+    this.resetUserForm();
     this.fulFilGeneralInformations(user);
 
     this.fulFilPhoneList(user.phoneList);
@@ -40,6 +42,21 @@ export class UserFormController {
 
     this.fulFilDependentsList(user.dependentsList);
     console.log(this.userForm);
+  }
+  private resetUserForm() {
+    this.userForm.reset();
+
+    this.generalInformations.reset();
+
+    this.phoneList.reset()
+    this.phoneList.clear();
+
+    this.addressList.reset()
+    this.addressList.clear();
+
+    this.dependentsList.reset()
+    this.dependentsList.clear();
+
   }
   private fulFilDependentsList(userDependentsList: DependentsList) {
     userDependentsList.forEach((dependent) => {
@@ -82,7 +99,7 @@ export class UserFormController {
     this.userForm = this._fb.group({
       generalInformations: this._fb.group({
         name: ['', Validators.required],
-        email: ['', Validators.required],
+        email: ['', [Validators.required, Validators.pattern(this.emailPattern)]],
         country: ['', Validators.required],
         state: ['', Validators.required],
         maritalStatus: [null, Validators.required],
