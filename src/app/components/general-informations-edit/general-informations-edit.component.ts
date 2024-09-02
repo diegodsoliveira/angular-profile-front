@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { FormControl, FormGroup } from '@angular/forms';
 import { CountriesList } from '../../types/countries-list';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { maritalStatusArray } from '../../utils/marital-status-description-map';
 
 @Component({
   selector: 'app-general-informations-edit',
@@ -30,6 +31,10 @@ export class GeneralInformationsEditComponent implements OnInit, OnChanges {
     this.statesListFiltered = this.statesList;
   }
 
+  get maritalStatusArray() {
+    return maritalStatusArray;
+  }
+
   get emailControl(): FormControl {
     return this.userForm.get('generalInformations.email') as FormControl;
   }
@@ -54,6 +59,10 @@ export class GeneralInformationsEditComponent implements OnInit, OnChanges {
   }
 
   private filterCountriesList(searchTerm: string) {
+    if (!searchTerm) {
+      this.countriesListFiltered = this.countriesList;
+      return;
+    }
     this.countriesListFiltered = this.countriesList.filter(
       (country) => country.name.toLowerCase().includes(searchTerm.toLowerCase().trim()));
   }
@@ -63,6 +72,10 @@ export class GeneralInformationsEditComponent implements OnInit, OnChanges {
   }
 
   private filterStatesList(searchTerm: string) {
+    if (!searchTerm) {
+      this.statesListFiltered = this.statesList;
+      return;
+    }
     this.statesListFiltered = this.statesList.filter(
       (state) => state.name.toLowerCase().includes(searchTerm.toLowerCase().trim())
     );

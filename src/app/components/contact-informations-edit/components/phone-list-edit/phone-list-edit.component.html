@@ -1,14 +1,13 @@
-<div class="grid lg:grid-cols-3 lg:gap-4">
-  <mat-form-field class="w-full">
-    <mat-label>Residencial:</mat-label>
-    <input matInput placeholder="+55 11 1234-1234" value="+55 11 1234-1234">
-  </mat-form-field>
-  <mat-form-field class="w-full">
-    <mat-label>Celular:</mat-label>
-    <input matInput placeholder="+55 11 99999-1234" value="+55 11 99999-1234">
-  </mat-form-field>
-  <mat-form-field class="w-full">
-    <mat-label>Emergência:</mat-label>
-    <input matInput placeholder="+55 11 1234-1234" value="+55 11 1234-1234">
-  </mat-form-field>
-</div>
+<form class="grid lg:grid-cols-3 lg:gap-4" [formGroup]="userForm">
+  <ng-container formGroupName="contactInformations">
+    <ng-container formArrayName="phoneList">
+      <mat-form-field class="w-full" *ngFor="let phone of phoneList.controls; let i = index" [formGroupName]="i">
+        <mat-label>{{ phoneList.value[i].typeDescription }}</mat-label>
+        <input matInput [placeholder]="phoneList.value[i].type | phonePlaceholder"
+          [mask]="phoneList.value[i].type | phoneMask" formControlName="phoneNumber">
+        <mat-error *ngIf="phone.get('phoneNumber')?.hasError('required')">O telefone é obrigatório.</mat-error>
+        <mat-error *ngIf="phone.get('phoneNumber')?.hasError('mask')">O telefone é inválido.</mat-error>
+      </mat-form-field>
+    </ng-container>
+  </ng-container>
+</form>

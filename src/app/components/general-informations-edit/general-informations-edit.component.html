@@ -34,21 +34,24 @@
       <div class="w-full">
         <div class="text-lg font-semibold">Estado civil:</div>
         <mat-radio-group class="w-full flex flex-col sm:flex-row sm:justify-between" formControlName="maritalStatus">
-          <mat-radio-button [value]="1">Solteiro</mat-radio-button>
-          <mat-radio-button [value]="2">Casado</mat-radio-button>
-          <mat-radio-button [value]="3">Divorciado</mat-radio-button>
+          <mat-radio-button *ngFor="let maritalStatusObj of maritalStatusArray" [value]="maritalStatusObj.code">
+            {{ maritalStatusObj.description }}</mat-radio-button>
         </mat-radio-group>
       </div>
       <mat-form-field class="w-full">
         <mat-label>Renda mensal:</mat-label>
-        <input matInput placeholder="R$ 5000,00" formControlName="monthlyIncome">
+        <!-- <span matTextPrefix="" *ngIf="monthlyIncome.value">R$ </span> -->
+        <input matInput placeholder="R$ 5000,00" formControlName="monthlyIncome" prefix="R$" mask="separator.2"
+          thousandSeparator="." decimalMarker=",">
+        <mat-error>A renda mensal é obrigatória.</mat-error>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Data de nascimento:</mat-label>
-        <input matInput [matDatepicker]="picker" formControlName="birthDate">
+        <input matInput [matDatepicker]="picker" formControlName="birthDate" readonly>
         <mat-hint>DD/MM/AAAA</mat-hint>
         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
+        <mat-error>A data de nascimento é obrigatória.</mat-error>
       </mat-form-field>
     </div>
   </ng-container>

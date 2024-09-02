@@ -15,14 +15,14 @@ registerLocaleData(localePt, 'pt-BR')
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     AngularMaterialModule,
-    ComponentsModule
+    ComponentsModule,
   ],
   providers: [
     provideAnimationsAsync()

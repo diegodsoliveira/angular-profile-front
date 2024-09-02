@@ -14,6 +14,7 @@ import { StatesList } from '../../types/states-list';
 })
 export class UserInformationsContainerComponent extends UserFormController implements OnInit, OnChanges {
 
+
   currentTabIndex: number = 0;
 
   countriesList: CountriesList = [];
@@ -55,5 +56,9 @@ export class UserInformationsContainerComponent extends UserFormController imple
     this._countriesService.getCountries().pipe(take(1)).subscribe((countriesList: CountriesList) => {
       this.countriesList = countriesList;
     });
+  }
+
+  mostrarUserForm() {
+    console.log('userForm', this.userForm);
   }
 }
