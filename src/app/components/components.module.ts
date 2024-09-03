@@ -17,7 +17,8 @@ import { ContactInformationsEditComponent } from './contact-informations-edit/co
 import { PhoneListEditComponent } from './contact-informations-edit/components/phone-list-edit/phone-list-edit.component';
 import { AddressListEditComponent } from './contact-informations-edit/components/address-list-edit/address-list-edit.component';
 import { DependentsListEditComponent } from './dependents-list-edit/dependents-list-edit.component';
-import { NgxMaskDirective, provideNgxMask } from "ngx-mask"
+import { NgxMaskDirective, provideNgxMask } from "ngx-mask";
+import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component'
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { NgxMaskDirective, provideNgxMask } from "ngx-mask"
     ContactInformationsEditComponent,
     PhoneListEditComponent,
     AddressListEditComponent,
-    DependentsListEditComponent
+    DependentsListEditComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     AngularMaterialModule,
@@ -50,6 +52,7 @@ import { NgxMaskDirective, provideNgxMask } from "ngx-mask"
     DependentsListComponent,
     ButtonsContainerComponent,
     UserInformationsContainerComponent,
+    ConfirmationDialogComponent
   ],
   providers: [
     provideNgxMask()

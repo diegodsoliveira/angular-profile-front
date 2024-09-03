@@ -8,6 +8,8 @@ import { PhonesList } from "../../types/phones-list";
 import { convertPtBrDateToDateObj } from "../../utils/convert-pt-br-date-to-date-obj";
 import { preparePhoneList } from "../../utils/prepare-phone-list";
 import { prepareAddressList } from "../../utils/prepare-address-list";
+import { requiredAddressValidator } from "../../utils/user-form-validators/required-address-validator";
+import { IDependent } from "../../interfaces/user/dependent.interface";
 
 export class UserFormController {
   userForm!: FormGroup;
@@ -24,6 +26,10 @@ export class UserFormController {
     return this.userForm.get('generalInformations') as FormGroup;
   }
 
+  get contactInformations(): FormGroup {
+    return this.userForm.get('contactInformations') as FormGroup;
+  }
+
   get phoneList(): FormArray {
     return this.userForm.get('contactInformations.phoneList') as FormArray;
   }
@@ -36,6 +42,18 @@ export class UserFormController {
     return this.userForm.get('dependentsList') as FormArray;
   }
 
+  get generalInformationsValid(): boolean {
+    return this.generalInformations.valid;
+  }
+
+  get contactInformationsValid(): boolean {
+    return this.contactInformations.valid;
+  }
+
+  get dependentsListValid(): boolean {
+    return this.dependentsList.valid;
+  }
+
   fulFilUserForm(user: IUser) {
     this.resetUserForm();
     this.fulFilGeneralInformations(user);
@@ -45,6 +63,35 @@ export class UserFormController {
     this.fulFilAddressList(user.addressList);
 
     this.fulFilDependentsList(user.dependentsList);
+
+    this.userForm.markAllAsTouched();
+    this.userForm.updateValueAndValidity();
+  }
+
+  removeDependent(dependentIndex: number) {
+    this.dependentsList.removeAt(dependentIndex);
+    this.dependentsList.markAsDirty();
+  }
+
+  addDependent() {
+    this.dependentsList.push(this.createDependentGroup());
+    this.userForm.markAllAsTouched();
+    this.dependentsList.markAsDirty();
+  }
+
+  private createDependentGroup(dependent: IDependent | null = null) {
+    if (!dependent) {
+      return this._fb.group({
+        name: ['', Validators.required],
+        age: ['', Validators.required],
+        document: ['', Validators.required],
+      });
+    }
+    return this._fb.group({
+      name: [dependent.name, Validators.required],
+      age: [dependent.age, Validators.required],
+      document: [dependent.document, Validators.required],
+    });
   }
 
   private resetUserForm() {
@@ -64,11 +111,7 @@ export class UserFormController {
   }
   private fulFilDependentsList(userDependentsList: DependentsList) {
     userDependentsList.forEach((dependent) => {
-      this.dependentsList.push(this._fb.group({
-        name: [dependent.name, Validators.required],
-        age: [dependent.age, Validators.required],
-        document: [dependent.document, Validators.required],
-      }));
+      this.dependentsList.push(this.createDependentGroup(dependent));
     });
 
   }
@@ -82,10 +125,10 @@ export class UserFormController {
         country: [address.country],
         state: [address.state],
         city: [address.city],
+      }, {
+        validators: requiredAddressValidator
       }));
     });
-    console.log('addressList', this.addressList);
-
   }
   private fulFilPhoneList(userPhoneList: PhonesList) {
     preparePhoneList(userPhoneList, false, (phone) => {
@@ -97,9 +140,6 @@ export class UserFormController {
         phoneNumber: [phone.phoneNumber, phoneValidators]
       }));
     });
-
-    console.log('formPhoneList', this.phoneList);
-
   }
 
   private fulFilGeneralInformations(user: IUser) {

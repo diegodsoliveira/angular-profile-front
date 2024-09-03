@@ -1,22 +1,32 @@
 <mat-tab-group [(selectedIndex)]="currentTabIndex">
-  <mat-tab label=" Geral">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      Geral
+      <mat-icon *ngIf="isInEditMode && !generalInformationsValid" class="red-circle-icon" color="warn">circle</mat-icon>
+    </ng-template>
+
     <app-general-informations *ngIf="!isInEditMode" [user]="userSelected"></app-general-informations>
     <app-general-informations-edit *ngIf="isInEditMode" [userForm]="userForm" [countriesList]="countriesList"
       [statesList]="statesList" (onCountrySelected)="onCountrySelected($event)"></app-general-informations-edit>
   </mat-tab>
 
-  <mat-tab label="Contato">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      Contato
+      <mat-icon *ngIf="isInEditMode && !contactInformationsValid" class="red-circle-icon" color="warn">circle</mat-icon>
+    </ng-template>
+
     <app-contact-informations *ngIf="!isInEditMode" [user]="userSelected"></app-contact-informations>
     <app-contact-informations-edit *ngIf="isInEditMode" [userForm]="userForm"></app-contact-informations-edit>
   </mat-tab>
   <mat-tab label="Dependente">
-    <app-dependents-list [dependentsList]="userSelected.dependentsList"></app-dependents-list>
-    <app-dependents-list-edit></app-dependents-list-edit>
+    <ng-template mat-tab-label>
+      Dependente
+      <mat-icon *ngIf="isInEditMode && !dependentsListValid" class="red-circle-icon" color="warn">circle</mat-icon>
+    </ng-template>
+
+    <app-dependents-list *ngIf="!isInEditMode" [dependentsList]="userSelected.dependentsList"></app-dependents-list>
+    <app-dependents-list-edit *ngIf="isInEditMode" [userForm]="userForm" (onRemoveDependent)="removeDependent($event)"
+      (onAddDependent)="addDependent()"></app-dependents-list-edit>
   </mat-tab>
 </mat-tab-group>
-
-<p>UserForm valid: {{ userForm.valid }}</p>
-<p>GeneralInformationsGroup valid: {{ userForm.get('generalInformations')?.valid }}</p>
-
-<button (click)="mostrarUserForm()"
-  class="rounded-md px-4 py-3 leading-5 text-white bg-blue-600 hover:bg-blue-500">Mostrar form</button>

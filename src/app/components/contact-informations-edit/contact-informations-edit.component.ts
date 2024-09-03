@@ -8,4 +8,5 @@ import { FormGroup } from '@angular/forms';
 })
 export class ContactInformationsEditComponent {
   @Input({ required: true }) userForm!: FormGroup;
+
 }

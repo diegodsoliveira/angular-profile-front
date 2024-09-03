@@ -12,3 +12,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background-
   background-color: #83a9eb !important;
   cursor: pointer;
 }
+
+.user-card-disabled {
+  background-color: #e6ecf8 !important;
+  cursor: not-allowed !important;
+}
