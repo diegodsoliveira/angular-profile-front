@@ -8,14 +8,14 @@ import { UsersListResponse } from './types/users-list-response';
 import { IDialogConfirmationData } from './interfaces/dialog-confirmation-data.interface';
 import { UpdateUserService } from './services/update-user.service';
 import { UserFormRawValueService } from './services/user-form-raw-value.service';
+import { convertUserFormToUser } from './utils/convert-user-form-to-user';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
-
   userSelectedIndex: number | undefined;
   userSelected: IUser = {} as IUser;
   isInEditMode: boolean = false;
@@ -30,9 +30,12 @@ export class AppComponent implements OnInit {
     private readonly _matDialog: MatDialog,
     private readonly _updateUserService: UpdateUserService,
     private readonly _userFormRawValueService: UserFormRawValueService
-  ) { }
+  ) {}
   ngOnInit() {
-    this._usersService.getUsers().pipe(take(1)).subscribe((usersListResponse) => this.usersList = usersListResponse);
+    this._usersService
+      .getUsers()
+      .pipe(take(1))
+      .subscribe((usersListResponse) => (this.usersList = usersListResponse));
   }
 
   onUserSelected(userIndex: number) {
@@ -43,10 +46,11 @@ export class AppComponent implements OnInit {
     }
   }
   onSaveButton() {
-    this.openConfirmationDialog({
-      title: 'Confirmar alteração de dados',
-      message: 'Deseja realmente salvar os valores alterados?'
-    },
+    this.openConfirmationDialog(
+      {
+        title: 'Confirmar alteração de dados',
+        message: 'Deseja realmente salvar os valores alterados?',
+      },
       (value: boolean) => {
         if (!value) return;
         this.saveUserInfos();
@@ -58,10 +62,12 @@ export class AppComponent implements OnInit {
 
   onCancelButton() {
     if (this.userFormUpdated) {
-      this.openConfirmationDialog({
-        title: 'O formulário foi alterado',
-        message: 'Deseja realmente cancelar as alterações feitas no formulário?'
-      },
+      this.openConfirmationDialog(
+        {
+          title: 'O formulário foi alterado',
+          message:
+            'Deseja realmente cancelar as alterações feitas no formulário?',
+        },
         (value: boolean) => {
           if (!value) return;
           this.isInEditMode = false;
@@ -73,18 +79,22 @@ export class AppComponent implements OnInit {
     }
   }
   onEditButton() {
+    this.userSelected = structuredClone(this.userSelected);
     this.isInEditMode = true;
   }
 
   onFormStatusChange(formStatus: boolean) {
-    setTimeout(() => this.enableSaveButton = formStatus, 0);
+    setTimeout(() => (this.enableSaveButton = formStatus), 0);
   }
 
   onUserFormFirstChange() {
-    this.userFormUpdated = true;;
+    this.userFormUpdated = true;
   }
 
-  private openConfirmationDialog(data: IDialogConfirmationData, callback: (value: boolean) => void) {
+  private openConfirmationDialog(
+    data: IDialogConfirmationData,
+    callback: (value: boolean) => void
+  ) {
     const dialogRef = this._matDialog.open(ConfirmationDialogComponent, {
       data,
     });
@@ -92,17 +102,17 @@ export class AppComponent implements OnInit {
   }
 
   private saveUserInfos() {
-    const newUser: IUser = this.convertUserFormToUser();
+    const newUser: IUser = convertUserFormToUser(
+      this._userFormRawValueService.userFormRawValue
+    );
 
-    this._updateUserService.updateUser(newUser).subscribe((newUserResponse: IUser) => {
-      if (this.userSelectedIndex === undefined) return;
+    this._updateUserService
+      .updateUser(newUser)
+      .subscribe((newUserResponse: IUser) => {
+        if (this.userSelectedIndex === undefined) return;
 
-      this.usersList[this.userSelectedIndex] = newUserResponse;
-    });
-  }
-
-  private convertUserFormToUser(): IUser {
-    console.log('userFormRawValue', this._userFormRawValueService.userFormRawValue)
-    return {} as IUser;
+        this.usersList[this.userSelectedIndex] = newUserResponse;
+        this.userSelected = structuredClone(newUserResponse);
+      });
   }
 }
