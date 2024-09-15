@@ -6,6 +6,7 @@ import { IUser } from './interfaces/user/user.interface';
 import { UsersService } from './services/users.service';
 import { UsersListResponse } from './types/users-list-response';
 import { IDialogConfirmationData } from './interfaces/dialog-confirmation-data.interface';
+import { UpdateUserService } from './services/update-user.service';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +26,8 @@ export class AppComponent implements OnInit {
 
   constructor(
     private readonly _usersService: UsersService,
-    private readonly _matDialog: MatDialog
+    private readonly _matDialog: MatDialog,
+    private readonly _updateUserService: UpdateUserService
   ) { }
   ngOnInit() {
     this._usersService.getUsers().pipe(take(1)).subscribe((usersListResponse) => this.usersList = usersListResponse);
@@ -50,8 +52,6 @@ export class AppComponent implements OnInit {
         this.userFormUpdated = false;
       }
     );
-
-    console.log('onSaveButton');
   }
 
   onCancelButton() {
@@ -90,6 +90,16 @@ export class AppComponent implements OnInit {
   }
 
   private saveUserInfos() {
-    console.log('Valores alterados!');
+    const newUser: IUser = this.convertUserFormToUser();
+
+    this._updateUserService.updateUser(newUser).subscribe((newUserResponse: IUser) => {
+      if (this.userSelectedIndex === undefined) return;
+
+      this.usersList[this.userSelectedIndex] = newUserResponse;
+    });
+  }
+
+  private convertUserFormToUser(): IUser {
+    return {} as IUser;
   }
 }
