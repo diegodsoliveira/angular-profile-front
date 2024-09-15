@@ -10,16 +10,20 @@ import { preparePhoneList } from "../../utils/prepare-phone-list";
 import { prepareAddressList } from "../../utils/prepare-address-list";
 import { requiredAddressValidator } from "../../utils/user-form-validators/required-address-validator";
 import { IDependent } from "../../interfaces/user/dependent.interface";
+import { UserFormRawValueService } from "../../services/user-form-raw-value.service";
 
 export class UserFormController {
   userForm!: FormGroup;
 
   private emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-  private _fb = inject(FormBuilder);
+  private readonly _fb = inject(FormBuilder);
+  private readonly _userFormRawValueService = inject(UserFormRawValueService);
 
   constructor() {
     this.createUserForm();
+
+    this.watchUserFormValueChangesAndUpdateService();
   }
 
   get generalInformations(): FormGroup {
@@ -79,6 +83,10 @@ export class UserFormController {
     this.dependentsList.markAsDirty();
   }
 
+  private watchUserFormValueChangesAndUpdateService() {
+    this.userForm.valueChanges.subscribe(() => this._userFormRawValueService.userFormRawValue = this.userForm.getRawValue());
+  }
+
   private createDependentGroup(dependent: IDependent | null = null) {
     if (!dependent) {
       return this._fb.group({
@@ -89,8 +97,8 @@ export class UserFormController {
     }
     return this._fb.group({
       name: [dependent.name, Validators.required],
-      age: [dependent.age, Validators.required],
-      document: [dependent.document, Validators.required],
+      age: [dependent.age.toString(), Validators.required],
+      document: [dependent.document.toString(), Validators.required],
     });
   }
 

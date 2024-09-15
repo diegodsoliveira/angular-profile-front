@@ -7,6 +7,7 @@ import { UsersService } from './services/users.service';
 import { UsersListResponse } from './types/users-list-response';
 import { IDialogConfirmationData } from './interfaces/dialog-confirmation-data.interface';
 import { UpdateUserService } from './services/update-user.service';
+import { UserFormRawValueService } from './services/user-form-raw-value.service';
 
 @Component({
   selector: 'app-root',
@@ -27,7 +28,8 @@ export class AppComponent implements OnInit {
   constructor(
     private readonly _usersService: UsersService,
     private readonly _matDialog: MatDialog,
-    private readonly _updateUserService: UpdateUserService
+    private readonly _updateUserService: UpdateUserService,
+    private readonly _userFormRawValueService: UserFormRawValueService
   ) { }
   ngOnInit() {
     this._usersService.getUsers().pipe(take(1)).subscribe((usersListResponse) => this.usersList = usersListResponse);
@@ -100,6 +102,7 @@ export class AppComponent implements OnInit {
   }
 
   private convertUserFormToUser(): IUser {
+    console.log('userFormRawValue', this._userFormRawValueService.userFormRawValue)
     return {} as IUser;
   }
 }
